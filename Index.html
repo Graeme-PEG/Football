@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup 2026 Family Sweepstake</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --pitch-dark:#0b2e22;
+    --pitch:#0f3d2c;
+    --pitch-light:#154a36;
+    --chalk:#f4f1e6;
+    --chalk-dim:#c8c4b4;
+    --gold:#e8b54a;
+    --gold-dim:#8a723a;
+    --out-red:#8a3b34;
+    --bulb-off:#3a4a42;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--pitch-dark);
+    color:var(--chalk);
+    font-family:'Inter',sans-serif;
+    padding:32px 16px 64px;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+
+  header{text-align:center;margin-bottom:8px;}
+  .eyebrow{
+    font-family:'Oswald',sans-serif;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--gold);
+    font-weight:600;
+  }
+  h1{
+    font-family:'Oswald',sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    font-size:clamp(28px,5vw,44px);
+    margin:6px 0 4px;
+  }
+  .updated{
+    font-size:13px;
+    color:var(--chalk-dim);
+    margin-bottom:28px;
+  }
+
+  /* Scoreboard bulb strip */
+  .scoreboard{
+    background:var(--pitch);
+    border:1px solid var(--pitch-light);
+    border-radius:8px;
+    padding:20px;
+    margin-bottom:36px;
+  }
+  .scoreboard-title{
+    font-family:'Oswald',sans-serif;
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--chalk-dim);
+    margin:0 0 16px;
+  }
+  .board-row{
+    display:grid;
+    grid-template-columns: 100px 1fr;
+    align-items:center;
+    gap:14px;
+    padding:8px 0;
+    border-bottom:1px solid rgba(244,241,230,0.06);
+  }
+  .board-row:last-child{border-bottom:none;}
+  .board-name{
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+  }
+  .bulbs{display:flex;gap:8px;}
+  .bulb{
+    width:16px;height:16px;border-radius:50%;
+    background:var(--bulb-off);
+    border:1px solid rgba(244,241,230,0.15);
+    position:relative;
+  }
+  .bulb.lit{
+    background:var(--gold);
+    box-shadow:0 0 6px 1px rgba(232,181,74,0.6);
+    border-color:var(--gold);
+  }
+  .lives-count{
+    margin-left:auto;
+    font-family:'Oswald',sans-serif;
+    font-size:13px;
+    color:var(--chalk-dim);
+    white-space:nowrap;
+  }
+  .board-row-inner{display:flex;align-items:center;gap:8px;width:100%;}
+
+  /* People grid */
+  .panels{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:16px;
+    margin-bottom:36px;
+  }
+  .panel{
+    background:var(--pitch);
+    border:1px solid var(--pitch-light);
+    border-radius:8px;
+    padding:20px;
+  }
+  .panel-title{
+    font-family:'Oswald',sans-serif;
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--chalk-dim);
+    margin:0 0 16px;
+  }
+  .fixture{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    padding:9px 0;
+    border-top:1px solid rgba(244,241,230,0.06);
+  }
+  .fixture:first-of-type{border-top:none;}
+  .fixture-teams{font-size:14px;font-weight:500;}
+  .fixture-teams .fam{
+    font-size:11px;
+    color:var(--gold-dim);
+    font-weight:400;
+    display:block;
+    margin-top:2px;
+  }
+  .fixture-when{
+    font-size:11.5px;
+    color:var(--chalk-dim);
+    text-align:right;
+    white-space:nowrap;
+  }
+  .odds-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 0;
+    border-top:1px solid rgba(244,241,230,0.06);
+  }
+  .odds-row:first-of-type{border-top:none;}
+  .odds-rank{
+    font-family:'Oswald',sans-serif;
+    font-weight:700;
+    font-size:12px;
+    color:var(--chalk-dim);
+    width:18px;
+  }
+  .odds-team{font-size:14px;font-weight:500;flex:1;}
+  .odds-owner{font-size:11px;color:var(--gold-dim);}
+  .odds-price{
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    color:var(--gold);
+  }
+  .panel-note{
+    font-size:11.5px;
+    color:var(--chalk-dim);
+    margin-top:14px;
+    line-height:1.6;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--pitch);
+    border:1px solid var(--pitch-light);
+    border-radius:8px;
+    padding:18px 20px 16px;
+  }
+  .card h2{
+    font-family:'Oswald',sans-serif;
+    text-transform:uppercase;
+    font-size:17px;
+    letter-spacing:0.5px;
+    margin:0 0 12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .card h2 .rem{
+    font-size:11px;
+    color:var(--gold);
+    font-weight:500;
+    letter-spacing:1px;
+  }
+  .team{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 0;
+    border-top:1px solid rgba(244,241,230,0.06);
+  }
+  .team:first-of-type{border-top:none;}
+  .code{
+    font-family:'Oswald',sans-serif;
+    font-weight:700;
+    font-size:12px;
+    width:40px;
+    text-align:center;
+    padding:4px 0;
+    border-radius:4px;
+    background:rgba(244,241,230,0.08);
+    color:var(--chalk);
+    flex-shrink:0;
+  }
+  .team.out .code{
+    background:rgba(138,59,52,0.25);
+    color:#d99a94;
+  }
+  .team.in .code{
+    background:rgba(232,181,74,0.18);
+    color:var(--gold);
+  }
+  .team-info{flex:1;min-width:0;}
+  .team-name{font-size:13.5px;font-weight:500;}
+  .team-status{
+    font-size:11.5px;
+    color:var(--chalk-dim);
+    margin-top:1px;
+  }
+  .team.out .team-name{color:var(--chalk-dim);text-decoration:line-through;text-decoration-color:rgba(200,196,180,0.4);}
+  .team.in .team-status{color:var(--gold);}
+
+  footer{
+    text-align:center;
+    margin-top:36px;
+    font-size:12px;
+    color:var(--chalk-dim);
+    line-height:1.7;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">World Cup 2026 &middot; Family Sweepstake</div>
+    <h1>Who's still in?</h1>
+    <div class="updated">Last updated 6 July 2026, ahead of Monday's Round of 16 games</div>
+  </header>
+
+  <div class="scoreboard">
+    <p class="scoreboard-title">Lives remaining</p>
+    <div id="board"></div>
+  </div>
+
+  <div class="panels">
+
+    <div class="panel">
+      <p class="panel-title">Next up</p>
+      <div class="fixture">
+        <div class="fixture-teams">Portugal vs Spain<span class="fam">Both Evie's &middot; R16 &middot; Dallas</span></div>
+        <div class="fixture-when">Mon 6 Jul<br>3pm ET</div>
+      </div>
+      <div class="fixture">
+        <div class="fixture-teams">USA vs Belgium<span class="fam">Charlotte vs Chelsey &middot; R16 &middot; Seattle</span></div>
+        <div class="fixture-when">Mon 6 Jul<br>8pm ET</div>
+      </div>
+      <div class="fixture">
+        <div class="fixture-teams">Argentina vs Egypt<span class="fam">Charlotte vs Mum &middot; R16 &middot; Atlanta</span></div>
+        <div class="fixture-when">Tue 7 Jul<br>12pm ET</div>
+      </div>
+      <div class="fixture">
+        <div class="fixture-teams">Switzerland vs Colombia<span class="fam">Jordan vs Mum &middot; R16 &middot; Vancouver</span></div>
+        <div class="fixture-when">Tue 7 Jul<br>4pm ET</div>
+      </div>
+      <div class="fixture">
+        <div class="fixture-teams">France vs Morocco<span class="fam">Clarissa vs Liam &middot; QF &middot; Boston</span></div>
+        <div class="fixture-when">Thu 9 Jul<br>4pm ET</div>
+      </div>
+      <div class="fixture">
+        <div class="fixture-teams">Spain/Portugal winner vs USA/Belgium winner<span class="fam">Evie vs Charlotte or Chelsey &middot; QF &middot; Inglewood</span></div>
+        <div class="fixture-when">Fri 10 Jul<br>3pm ET</div>
+      </div>
+      <div class="fixture">
+        <div class="fixture-teams">Norway vs England<span class="fam">Curtis vs Dad &middot; QF &middot; Miami</span></div>
+        <div class="fixture-when">Sat 11 Jul<br>5pm ET</div>
+      </div>
+      <div class="fixture">
+        <div class="fixture-teams">Argentina/Egypt winner vs Switzerland/Colombia winner<span class="fam">Charlotte or Mum vs Jordan or Mum &middot; QF &middot; Kansas City</span></div>
+        <div class="fixture-when">Sat 11 Jul<br>9pm ET</div>
+      </div>
+      <p class="panel-note">Two family head-to-heads already: Evie plays herself in Portugal vs Spain, and Mum is guaranteed a semi-final spot whichever of Egypt/Colombia gets through their side.</p>
+    </div>
+
+    <div class="panel">
+      <p class="panel-title">Odds to win it all</p>
+      <div class="odds-row">
+        <span class="odds-rank">1</span>
+        <span class="odds-team">France<span class="odds-owner"> &middot; Clarissa</span></span>
+        <span class="odds-price">+170</span>
+      </div>
+      <div class="odds-row">
+        <span class="odds-rank">2</span>
+        <span class="odds-team">Argentina<span class="odds-owner"> &middot; Charlotte</span></span>
+        <span class="odds-price">+440</span>
+      </div>
+      <div class="odds-row">
+        <span class="odds-rank">3</span>
+        <span class="odds-team">England<span class="odds-owner"> &middot; Dad</span></span>
+        <span class="odds-price">+500</span>
+      </div>
+      <div class="odds-row">
+        <span class="odds-rank">4</span>
+        <span class="odds-team">Spain<span class="odds-owner"> &middot; Evie</span></span>
+        <span class="odds-price">+550</span>
+      </div>
+      <div class="odds-row">
+        <span class="odds-rank">5</span>
+        <span class="odds-team">Portugal<span class="odds-owner"> &middot; Evie</span></span>
+        <span class="odds-price">+1400</span>
+      </div>
+      <div class="odds-row">
+        <span class="odds-rank">6</span>
+        <span class="odds-team">Norway<span class="odds-owner"> &middot; Curtis</span></span>
+        <span class="odds-price">+1600</span>
+      </div>
+      <div class="odds-row">
+        <span class="odds-rank">7</span>
+        <span class="odds-team">Colombia<span class="odds-owner"> &middot; Mum</span></span>
+        <span class="odds-price">+2500</span>
+      </div>
+      <div class="odds-row">
+        <span class="odds-rank">8</span>
+        <span class="odds-team">Morocco<span class="odds-owner"> &middot; Liam</span></span>
+        <span class="odds-price">+3000</span>
+      </div>
+      <div class="odds-row">
+        <span class="odds-rank">9</span>
+        <span class="odds-team">USA<span class="odds-owner"> &middot; Charlotte</span></span>
+        <span class="odds-price">+3000</span>
+      </div>
+      <p class="panel-note">Belgium, Switzerland and Egypt are still alive but sit outside the leading contenders on the outright market. Odds via FanDuel, as of 6 July. Clarissa's France is the family's best remaining shot at the trophy.</p>
+    </div>
+
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    Gold = still in the tournament &middot; grey with strikethrough = knocked out<br>
+    Ask Claude to refresh this once more results come in.
+  </footer>
+
+</div>
+
+<script>
+const people = [
+  { name:"Charlotte", teams:[
+    {code:"ARG",name:"Argentina",status:"in",info:"Round of 16 vs Egypt · Tue 7 Jul · Atlanta"},
+    {code:"MEX",name:"Mexico",status:"out",info:"Lost Round of 16 to England, 3-2"},
+    {code:"GHA",name:"Ghana",status:"out",info:"Lost Round of 32 to Colombia"},
+    {code:"USA",name:"USA",status:"in",info:"Round of 16 vs Belgium · Mon 6 Jul · Seattle"},
+  ]},
+  { name:"Evie", teams:[
+    {code:"PAR",name:"Paraguay",status:"out",info:"Lost Round of 16 to France, 0-1"},
+    {code:"SCO",name:"Scotland",status:"out",info:"Eliminated in the group stage"},
+    {code:"POR",name:"Portugal",status:"in",info:"Round of 16 vs Spain · Mon 6 Jul · Dallas"},
+    {code:"ESP",name:"Spain",status:"in",info:"Round of 16 vs Portugal · Mon 6 Jul · Dallas"},
+  ]},
+  { name:"Mum", teams:[
+    {code:"CRO",name:"Croatia",status:"out",info:"Lost Round of 32 to Portugal"},
+    {code:"COL",name:"Colombia",status:"in",info:"Round of 16 vs Switzerland · Tue 7 Jul · Vancouver"},
+    {code:"JPN",name:"Japan",status:"out",info:"Lost Round of 32 to Brazil"},
+    {code:"EGY",name:"Egypt",status:"in",info:"Round of 16 vs Argentina · Tue 7 Jul · Atlanta"},
+  ]},
+  { name:"Curtis", teams:[
+    {code:"NOR",name:"Norway",status:"in",info:"Quarter-final vs England · Sat 11 Jul · Miami"},
+    {code:"SEN",name:"Senegal",status:"out",info:"Lost Round of 32 to Belgium (AET)"},
+    {code:"SWE",name:"Sweden",status:"out",info:"Lost Round of 32 to France"},
+    {code:"IRQ",name:"Iraq",status:"out",info:"Eliminated in the group stage"},
+  ]},
+  { name:"Clarissa", teams:[
+    {code:"FRA",name:"France",status:"in",info:"Quarter-final vs Morocco · Thu 9 Jul · Boston"},
+    {code:"BRA",name:"Brazil",status:"out",info:"Lost Round of 16 to Norway, 1-2"},
+    {code:"AUT",name:"Austria",status:"out",info:"Lost Round of 32 to Spain"},
+    {code:"CIV",name:"Ivory Coast",status:"out",info:"Lost Round of 32 to Norway"},
+  ]},
+  { name:"Chelsey", teams:[
+    {code:"BEL",name:"Belgium",status:"in",info:"Round of 16 vs USA · Mon 6 Jul · Seattle"},
+    {code:"GER",name:"Germany",status:"out",info:"Lost Round of 32 to Paraguay on pens"},
+    {code:"BIH",name:"Bosnia",status:"out",info:"Lost Round of 32 to USA"},
+    {code:"KOR",name:"South Korea",status:"out",info:"Eliminated in the group stage"},
+  ]},
+  { name:"Dad", teams:[
+    {code:"NED",name:"Netherlands",status:"out",info:"Lost Round of 32 to Morocco on pens"},
+    {code:"ENG",name:"England",status:"in",info:"Quarter-final vs Norway · Sat 11 Jul · Miami"},
+    {code:"ALG",name:"Algeria",status:"out",info:"Lost Round of 32 to Switzerland"},
+    {code:"QAT",name:"Qatar",status:"out",info:"Eliminated in the group stage"},
+  ]},
+  { name:"Liam", teams:[
+    {code:"KSA",name:"Saudi Arabia",status:"out",info:"Eliminated in the group stage"},
+    {code:"URU",name:"Uruguay",status:"out",info:"Eliminated in the group stage"},
+    {code:"MAR",name:"Morocco",status:"in",info:"Quarter-final vs France · Thu 9 Jul · Boston"},
+    {code:"CAN",name:"Canada",status:"out",info:"Lost Round of 16 to Morocco, 0-3"},
+  ]},
+  { name:"Jordan", teams:[
+    {code:"COD",name:"DR Congo",status:"out",info:"Lost Round of 32 to England"},
+    {code:"AUS",name:"Australia",status:"out",info:"Lost Round of 32 to Egypt on pens"},
+    {code:"SUI",name:"Switzerland",status:"in",info:"Round of 16 vs Colombia · Tue 7 Jul · Vancouver"},
+    {code:"CPV",name:"Cape Verde",status:"out",info:"Lost Round of 32 to Argentina"},
+  ]},
+  { name:"Graeme", teams:[
+    {code:"IRN",name:"Iran",status:"out",info:"Eliminated in the group stage"},
+    {code:"RSA",name:"South Africa",status:"out",info:"Lost Round of 32 to Canada"},
+    {code:"ECU",name:"Ecuador",status:"out",info:"Lost Round of 32 to Mexico"},
+    {code:"CZE",name:"Czechia",status:"out",info:"Eliminated in the group stage"},
+  ]},
+];
+
+people.forEach(p => p.lives = p.teams.filter(t => t.status === "in").length);
+const sorted = [...people].sort((a,b) => b.lives - a.lives);
+
+const board = document.getElementById("board");
+sorted.forEach(p => {
+  const row = document.createElement("div");
+  row.className = "board-row";
+  const bulbs = p.teams.map(t => `<span class="bulb ${t.status==='in'?'lit':''}"></span>`).join("");
+  row.innerHTML = `
+    <div class="board-name">${p.name}</div>
+    <div class="board-row-inner">
+      <div class="bulbs">${bulbs}</div>
+      <div class="lives-count">${p.lives} of 4 still playing</div>
+    </div>
+  `;
+  board.appendChild(row);
+});
+
+const grid = document.getElementById("grid");
+sorted.forEach(p => {
+  const card = document.createElement("div");
+  card.className = "card";
+  const teamsHtml = p.teams.map(t => `
+    <div class="team ${t.status}">
+      <div class="code">${t.code}</div>
+      <div class="team-info">
+        <div class="team-name">${t.name}</div>
+        <div class="team-status">${t.info}</div>
+      </div>
+    </div>
+  `).join("");
+  card.innerHTML = `<h2>${p.name} <span class="rem">${p.lives}/4</span></h2>${teamsHtml}`;
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>
